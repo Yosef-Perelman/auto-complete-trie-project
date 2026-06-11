@@ -21,7 +21,7 @@ function showCommandsList() {
 
 showWelcome();
 showCommandsList();
-const trie = new Trie();
+const root = new Trie(" ");
 
 rl.on("line", (input) => {
   const line = input.trim();
