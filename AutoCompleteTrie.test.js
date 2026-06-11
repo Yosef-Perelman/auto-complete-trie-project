@@ -3,8 +3,18 @@ const Trie = require("./AutoCompleteTrie");
 test("addWord", () => {
   const root = new Trie(" ");
   root.addWord("dad");
-  console.log(JSON.stringify(root, null, 2));
-  expect(root).toBeTruthy();
+  expect(root.children.has("d")).toBeTruthy();
+  expect(root.children.get("d").children.has("a")).toBeTruthy();
+  expect(
+    root.children.get("d").children.get("a").children.get("d").endOfWord,
+  ).toBeTruthy();
+  expect(
+    root.children
+      .get("d")
+      .children.get("a")
+      .children.get("d")
+      .children.has("a"),
+  ).toBeFalsy();
 });
 
 test("findWord", () => {
