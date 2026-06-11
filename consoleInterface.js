@@ -4,6 +4,7 @@ const Trie = require("./AutoCompleteTrie");
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
+  prompt: "> ",
 });
 
 function showWelcome() {
@@ -21,6 +22,8 @@ function showCommandsList() {
 
 showWelcome();
 showCommandsList();
+rl.prompt();
+
 const root = new Trie(" ");
 
 rl.on("line", (input) => {
@@ -28,27 +31,39 @@ rl.on("line", (input) => {
   if (!line) {
     console.log("Try typing again: ");
   }
-  const [cmd, ...rest] = line.split(/\s+/);
+  const [cmd, ...arg] = line.split(/\s+/);
+  let word = arg[0];
   switch (cmd.toLowerCase()) {
-    case add:
-      console.log(trie.addWord(arg));
+    case "add": {
+      root.addWord(word);
+      console.log(`✓ Added '${word}' to dictionary`);
       break;
-    case find:
-      console.log(trie.findWord(arg));
+    }
+    case "find": {
+      if (root.findWord(word)) {
+        console.log(`✓ '${word}' exists in dictionary`);
+      } else {
+        console.log(`✓ '${word}' don't exists in dictionary`);
+      }
       break;
-    case complete:
-      console.log(trie.predictWords(arg));
+    }
+    case "complete": {
+      const completions = root.predictWords(word);
+      console.log(`Suggestions for '${word}': ${completions.join(", ")}`);
       break;
-    case help:
+    }
+    case "help": {
       showCommandsList();
       break;
-    case exit:
+    }
+    case "exit": {
       rl.close();
       break;
+    }
     default:
       break;
   }
-  console.log("Type again: ");
+  rl.prompt();
 }).on("close", () => {
   console.log("Goodbye!");
   process.exit(0);
