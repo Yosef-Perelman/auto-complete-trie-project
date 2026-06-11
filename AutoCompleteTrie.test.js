@@ -1,18 +1,16 @@
 const Trie = require("./AutoCompleteTrie");
 
-const root = new Trie(" ");
-console.log(root);
-
 test("addWord", () => {
+  const root = new Trie(" ");
   root.addWord("dad");
-  console.log(root);
+  console.log(JSON.stringify(root, null, 2));
   expect(root).toBeTruthy();
 });
 
-// describe("Trie", () => {
-//   test("addWord", () => {
-//     const root = new Trie(" ");
-//     root.addWord("dad");
-//     expect(root).toBeTruthy();
-//   });
-// });
+test("findWord", () => {
+  const root = new Trie(" ");
+  root.addWord("dad");
+
+  expect(root.findWord("dad")).toBeTruthy();
+  expect(root.findWord("daddy")).toBeFalsy();
+});

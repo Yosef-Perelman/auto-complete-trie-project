@@ -1,24 +1,39 @@
 class AutoCompleteTrie {
   constructor(value, endOfWord = false) {
     this.value = value;
-    this.children = new Map();
     this.endOfWord = endOfWord;
+    this.children = new Map();
   }
 
   addWord(word) {
     let [first, ...rest] = word;
     rest = rest.join("");
+
     if (!this.children.has(first)) {
-      this.children[first] = new AutoCompleteTrie(first);
+      this.children.set(first, new AutoCompleteTrie(first));
     }
+
     if (!rest) {
-      this.children[first].endOfWord = true;
+      this.children.get(first).endOfWord = true;
     } else {
-      this.children[first].addWord(rest);
+      this.children.get(first).addWord(rest);
     }
   }
 
-  findWord(word) {}
+  findWord(word) {
+    if (word.length === 0) {
+      return this.endOfWord;
+    }
+
+    let [first, ...rest] = word;
+    rest = rest.join("");
+
+    if (this.children.has(first)) {
+      return this.children.get(first).findWord(rest);
+    } else {
+      return false;
+    }
+  }
 
   predictWords(prefix) {}
 
