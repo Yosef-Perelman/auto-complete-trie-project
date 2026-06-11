@@ -39,13 +39,18 @@ class AutoCompleteTrie {
 
   _getRemainingTree(prefix, node) {
     if (!prefix) {
-      return this;
+      return node;
     }
 
-    let [first, ...rest] = word;
-    rest = rest.join("");
+    const [first, ...rest] = prefix;
+    const restWord = rest.join("");
+    const child = node.children.get(first);
 
-    return _getRemainingTree(rest, this.children.get(first));
+    if (!child) {
+      return null;
+    }
+
+    return this._getRemainingTree(restWord, child);
   }
 
   _allWordsHelper(prefix, node, allWords) {

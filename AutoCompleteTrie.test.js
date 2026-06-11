@@ -24,3 +24,28 @@ test("findWord", () => {
   expect(root.findWord("dad")).toBeTruthy();
   expect(root.findWord("daddy")).toBeFalsy();
 });
+
+test("_getRemainingTree", () => {
+  const root = new Trie(" ");
+  root.addWord("dad");
+  root.addWord("day");
+
+  const subtree = root._getRemainingTree("da", root);
+
+  expect(subtree).not.toBeNull();
+  expect(subtree.value).toBe("a");
+  expect(subtree.children.has("d")).toBeTruthy();
+  expect(subtree.children.has("y")).toBeTruthy();
+});
+
+test("_allWordsHelper", () => {
+  const root = new Trie(" ");
+  root.addWord("dad");
+  root.addWord("day");
+
+  const words = root._allWordsHelper("", root, []);
+
+  expect(words).toContain("dad");
+  expect(words).toContain("day");
+  expect(words).toHaveLength(2);
+});
