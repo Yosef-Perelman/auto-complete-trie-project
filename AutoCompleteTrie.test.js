@@ -49,3 +49,17 @@ test("_allWordsHelper", () => {
   expect(words).toContain("day");
   expect(words).toHaveLength(2);
 });
+
+test("predictWords returns completions for a prefix", () => {
+  const root = new Trie(" ");
+  root.addWord("dad");
+  root.addWord("day");
+  root.addWord("dazzle");
+
+  const completions = root.predictWords("da");
+
+  expect(completions).toContain("dad");
+  expect(completions).toContain("day");
+  expect(completions).toContain("dazzle");
+  expect(completions).toHaveLength(3);
+});
