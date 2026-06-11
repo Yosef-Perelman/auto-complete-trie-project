@@ -63,3 +63,21 @@ test("predictWords returns completions for a prefix", () => {
   expect(completions).toContain("dazzle");
   expect(completions).toHaveLength(3);
 });
+
+test("Integration tests", () => {
+  const root = new Trie(" ");
+  root.addWord("that");
+  root.addWord("their");
+  root.addWord("there");
+  root.addWord("this");
+  root.addWord("does");
+  root.addWord("did");
+
+  expect(root.findWord("did")).toBeTruthy();
+  expect(root.findWord("didi")).toBeFalsy();
+
+  const prediction = root.predictWords("th");
+
+  expect(prediction.length).toBe(4);
+  expect(prediction).toContain("this");
+});
