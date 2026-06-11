@@ -1,12 +1,6 @@
 const readline = require("readline");
 const Trie = require("./AutoCompleteTrie");
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  prompt: "> ",
-});
-
 function showWelcome() {
   console.log("=== AutoComplete Trie Console ===");
 }
@@ -20,14 +14,7 @@ function showCommandsList() {
   console.log(" exit            - Quit the application");
 }
 
-showWelcome();
-showCommandsList();
-rl.prompt();
-
-const root = new Trie(" ");
-
-rl.on("line", (input) => {
-  const line = input.trim();
+function processCommand(line, root, rl) {
   if (!line) {
     console.log("Try typing again: ");
   }
@@ -63,8 +50,29 @@ rl.on("line", (input) => {
     default:
       break;
   }
+}
+
+module.exports = { showWelcome, showCommandsList, processCommand };
+
+if (require.main === module) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    prompt: "> ",
+  });
+
+  showWelcome();
+  showCommandsList();
   rl.prompt();
-}).on("close", () => {
-  console.log("Goodbye!");
-  process.exit(0);
-});
+
+  const root = new Trie(" ");
+
+  rl.on("line", (input) => {
+    const line = input.trim();
+    processCommand(line, root, rl);
+    rl.prompt();
+  }).on("close", () => {
+    console.log("Goodbye!");
+    process.exit(0);
+  });
+}
