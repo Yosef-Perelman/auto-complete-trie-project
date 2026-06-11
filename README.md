@@ -1,1 +1,1 @@
-# autoComplete-trie-project
+# auto-complete-trie-project
