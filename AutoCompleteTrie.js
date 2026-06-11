@@ -37,17 +37,30 @@ class AutoCompleteTrie {
 
   predictWords(prefix) {}
 
-  completePrefix(arg) {}
-
   _getRemainingTree(prefix, node) {
     if (!prefix) {
       return this;
-    } else {
-      return _getRemainingTree(prefix.slice(1), node);
     }
+
+    let [first, ...rest] = word;
+    rest = rest.join("");
+
+    return _getRemainingTree(rest, this.children.get(first));
   }
 
-  _allWordsHelper(prefix, node, allWords) {}
+  _allWordsHelper(prefix, node, allWords) {
+    if (!node) return allWords;
+
+    if (node.endOfWord) {
+      allWords.push(prefix);
+    }
+
+    for (const child of node.children.values()) {
+      this._allWordsHelper(prefix + child.value, child, allWords);
+    }
+
+    return allWords;
+  }
 }
 
 module.exports = AutoCompleteTrie;

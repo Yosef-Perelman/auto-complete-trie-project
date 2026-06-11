@@ -37,7 +37,7 @@ rl.on("line", (input) => {
       console.log(trie.findWord(arg));
       break;
     case complete:
-      console.log(trie.completePrefix(arg));
+      console.log(trie.predictWords(arg));
       break;
     case help:
       showCommandsList();
