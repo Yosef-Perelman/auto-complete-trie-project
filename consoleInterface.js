@@ -1,5 +1,5 @@
 const readline = require("readline");
-const trie = require("./AutoCompleteTrie");
+const Trie = require("./AutoCompleteTrie");
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -21,8 +21,9 @@ function showCommandsList() {
 
 showWelcome();
 showCommandsList();
+const trie = new Trie();
 
-rl.on("line", (line) => {
+rl.on("line", (input) => {
   const line = input.trim();
   if (!line) {
     console.log("Try typing again: ");

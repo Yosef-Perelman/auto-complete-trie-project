@@ -10,6 +10,8 @@ class AutoCompleteTrie {
 
   predictWords(prefix) {}
 
+  completePrefix(arg) {}
+
   _getRemainingTree(prefix, node) {
     if (!prefix) {
       return this;
@@ -20,3 +22,5 @@ class AutoCompleteTrie {
 
   _allWordsHelper(prefix, node, allWords) {}
 }
+
+module.exports = AutoCompleteTrie;
