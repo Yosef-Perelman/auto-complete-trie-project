@@ -1,78 +1,76 @@
-const readline = require("readline");
-const Trie = require("./AutoCompleteTrie");
+import Trie from "./AutoCompleteTrie.js";
 
-function showWelcome() {
-  console.log("=== AutoComplete Trie Console ===");
-}
+const root = new Trie(" ");
+let numOfWords = 0;
 
-function showCommandsList() {
-  console.log("Available commands:");
-  console.log(" add <word>      - Add a word to the dictionary");
-  console.log(" find <word>     - Check if word exists");
-  console.log(" complete <pref> - Show all completions for prefix");
-  console.log(" help            - Show this help");
-  console.log(" exit            - Quit the application");
-}
+const addButton = document.getElementById("addButton");
+const wordInput = document.getElementById("wordInput");
+const sugInput = document.getElementById("sugInput");
+const wordsNumber = document.getElementById("number");
+const addedMessage = document.getElementById("addedMessage");
+const suggestionsList = document.getElementById("suggestionsList");
+const list = document.getElementById("list");
 
-function processCommand(line, root, rl) {
-  if (!line) {
-    console.log("Try typing again: ");
+addButton.addEventListener("click", () => {
+  const word = wordInput.value.trim();
+
+  if (!word) {
+    addedMessage.textContent = `Cannot add empty word`;
+    addedMessage.style.display = "block";
+  } else if (root.findWord(word)) {
+    addedMessage.textContent = `The word already in the dictionary`;
+    addedMessage.style.display = "block";
+  } else {
+    root.addWord(word);
+
+    console.log(`✓ Added '${word}' to dictionary`);
+
+    wordsNumber.textContent = ++numOfWords;
+
+    // Show success message
+    addedMessage.textContent = `✓ Added '${word}' to dictionary`;
+    addedMessage.style.display = "block";
   }
-  const [cmd, ...arg] = line.split(/\s+/);
-  let word = arg[0];
-  switch (cmd.toLowerCase()) {
-    case "add": {
-      root.addWord(word);
-      console.log(`✓ Added '${word}' to dictionary`);
-      break;
-    }
-    case "find": {
-      if (root.findWord(word)) {
-        console.log(`✓ '${word}' exists in dictionary`);
-      } else {
-        console.log(`✓ '${word}' don't exists in dictionary`);
-      }
-      break;
-    }
-    case "complete": {
-      const completions = root.predictWords(word);
-      console.log(`Suggestions for '${word}': ${completions.join(", ")}`);
-      break;
-    }
-    case "help": {
-      showCommandsList();
-      break;
-    }
-    case "exit": {
-      rl.close();
-      break;
-    }
-    default:
-      break;
+
+  // Clear input
+  wordInput.value = "";
+
+  // Hide message after 10 seconds
+  setTimeout(() => {
+    addedMessage.style.display = "none";
+  }, 10000);
+});
+
+sugInput.addEventListener("input", () => {
+  list.replaceChildren();
+
+  const text = sugInput.value.trim();
+
+  if (!text) {
+    suggestionsList.classList.remove("open");
+    return;
   }
-}
 
-module.exports = { showWelcome, showCommandsList, processCommand };
+  const completions = root.predictWords(text);
 
-if (require.main === module) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    prompt: "> ",
-  });
+  if (completions.length === 0) {
+    suggestionsList.classList.remove("open");
+    return;
+  }
 
-  showWelcome();
-  showCommandsList();
-  rl.prompt();
+  for (const word of completions) {
+    const li = document.createElement("li");
 
-  const root = new Trie(" ");
+    li.innerHTML =
+      `<span class="highlight">${text}</span>` + word.slice(text.length);
 
-  rl.on("line", (input) => {
-    const line = input.trim();
-    processCommand(line, root, rl);
-    rl.prompt();
-  }).on("close", () => {
-    console.log("Goodbye!");
-    process.exit(0);
-  });
-}
+    li.addEventListener("click", () => {
+      sugInput.value = word;
+      suggestionsList.classList.remove("open");
+    });
+
+    list.appendChild(li);
+  }
+
+  suggestionsList.classList.add("open");
+});

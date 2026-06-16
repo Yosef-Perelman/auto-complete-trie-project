@@ -18,9 +18,23 @@
         <button id="addButton">Add Word</button>
         <div class="addedMessage"></div>
       </div>
-      <input type="text" placeholder="Start typing to see suggestions..." />
-      <div class="wordsNum"></div>
+      <div id="addedMessage" class="addedMessage"></div>
+      <div class="autocomplete">
+        <input
+          id="sugInput"
+          type="text"
+          placeholder="Start typing to see suggestions..."
+        />
+        <div id="suggestionsList" class="suggestionsList">
+          <ul id="list"></ul>
+        </div>
+      </div>
+      <div class="wordsNum">
+        <div id="number">0</div>
+        Words In Dictionary
+        <div></div>
+      </div>
     </div>
-    <script src="consoleInterface.js"></script>
+    <script type="module" src="consoleInterface.js"></script>
   </body>
 </html>
